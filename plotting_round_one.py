@@ -18,10 +18,10 @@ glb_max = np.max([low_max, high_max])
 bins = np.arange(glb_min-50, glb_max+50, 50)
 
 # Plot the data as a histogram.
-_ = plt.hist((xa_low, xa_high), bins=bins)
-plt.xlabel("Cross-sectional area ($\mu m ^2$)")
-plt.ylabel('Count')
-plt.show()
+# _ = plt.hist((xa_low, xa_high), bins=bins)
+# plt.xlabel("Cross-sectional area ($\mu m ^2$)")
+# plt.ylabel('Count')
+# plt.show()
 
 # Plot the data as two overlaid histograms.
 _ = plt.hist(xa_low, normed=True, bins=bins, histtype='stepfilled', alpha=0.5)
@@ -30,3 +30,8 @@ plt.xlabel("Cross-sectional area ($\mu m ^2$)")
 plt.ylabel('Frequency')
 plt.legend(('low concentration', 'high concentration'), loc='upper right')
 plt.show()
+
+# Save the figure
+plt.savefig('egg_area_histograms.svg', bbox_inches='tight')
+
+# Look up bokeh for plotting with interactive graphics
