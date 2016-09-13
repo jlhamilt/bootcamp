@@ -29,9 +29,9 @@ _ = plt.hist(xa_high, normed=True, bins=bins, histtype='stepfilled', alpha=0.5)
 plt.xlabel("Cross-sectional area ($\mu m ^2$)")
 plt.ylabel('Frequency')
 plt.legend(('low concentration', 'high concentration'), loc='upper right')
-plt.show()
 
-# Save the figure
-plt.savefig('egg_area_histograms.svg', bbox_inches='tight')
+# Save and show the figure
+plt.savefig('egg_area_histograms.pdf', bbox_inches='tight')
+plt.show()
 
 # Look up bokeh for plotting with interactive graphics
