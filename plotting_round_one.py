@@ -22,3 +22,11 @@ _ = plt.hist((xa_low, xa_high), bins=bins)
 plt.xlabel("Cross-sectional area ($\mu m ^2$)")
 plt.ylabel('Count')
 plt.show()
+
+# Plot the data as two overlaid histograms.
+_ = plt.hist(xa_low, normed=True, bins=bins, histtype='stepfilled', alpha=0.5)
+_ = plt.hist(xa_high, normed=True, bins=bins, histtype='stepfilled', alpha=0.5)
+plt.xlabel("Cross-sectional area ($\mu m ^2$)")
+plt.ylabel('Frequency')
+plt.legend(('low concentration', 'high concentration'), loc='upper right')
+plt.show()
