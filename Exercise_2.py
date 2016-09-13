@@ -65,3 +65,35 @@ open('data/salmonella_spi1_region_mapped.fna', 'w') as new_seq:
     while i < len(seq):
         new_seq.write(seq_mapped[i:i+60] + '\n')
         i += 60
+
+
+# Exercise 2.4: ORF detection
+def seq_positions(seq, codon):
+    """Finds all positions in the sequence with the given codon."""
+
+    positions = []
+    i = 0
+    while codon in seq[i:]:
+        pos = seq.find(codon, i)
+        positions.append(pos)
+        i = pos + 1
+    return positions
+
+
+def longest_orf(seq):
+    """Returns the longest open read frame in the sequence."""
+
+    # Find possible start positions
+    starts = seq_positions(seq, 'ATG')
+
+    # Find possible end positions
+    ends = seq_positions(seq, 'TGA') + seq_positions(seq, 'TAG') + seq_positions(seq, 'TAA')
+
+    # Go through all starts and ends keeping track of longest orf
+    orf = ''
+    for start in starts:
+        for end in ends:
+            if start > end and (start - end) % 3 == 0 and len(orf) < (start - end):
+                orf = seq[start:end+3]
+
+    return orf
