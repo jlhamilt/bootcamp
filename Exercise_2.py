@@ -76,10 +76,12 @@ def seq_positions(seq, codon):
 
     positions = []
     i = 0
+
     while codon in seq[i:]:
         pos = seq.find(codon, i)
         positions.append(pos)
         i = pos + 1
+    positions.sort()
     return positions
 
 
@@ -96,8 +98,11 @@ def longest_orf(seq):
     orf = ''
     for start in starts:
         for end in ends:
-            if start < end and (end - start) % 3 == 0 and len(orf) < (end - start):
-                orf = seq[start:end+3]
+            if start < end and (end - start) % 3 == 0:
+                if len(orf) < (end - start):
+                    orf = seq[start:end+3]
+                else:
+                    break
 
     return orf
 
