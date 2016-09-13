@@ -93,7 +93,7 @@ def longest_orf(seq):
     orf = ''
     for start in starts:
         for end in ends:
-            if start > end and (start - end) % 3 == 0 and len(orf) < (start - end):
+            if start < end and (end - start) % 3 == 0 and len(orf) < (end - start):
                 orf = seq[start:end+3]
 
     return orf
