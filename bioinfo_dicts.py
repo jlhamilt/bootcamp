@@ -1,7 +1,7 @@
 """
 Useful bioinformatics dictionaries.
 """
-
+# Amino acid dictionary
 aa = {'A': 'Ala',
       'R': 'Arg',
       'N': 'Asn',

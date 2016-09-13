@@ -1,0 +1,1 @@
+The golden ratio, phi = 1.61803399
