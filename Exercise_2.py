@@ -1,5 +1,8 @@
 # Bootcamp 9/12/2016 Example exercises
 
+# Import for translating a sequence
+import bioinfo_dicts
+
 # Exercise 2.2: Parsing the SPI1 Genome
 # Only need to run it once
 # with open('data/salmonella_spi1_region.fna', 'r') as f, \
@@ -97,3 +100,23 @@ def longest_orf(seq):
                 orf = seq[start:end+3]
 
     return orf
+
+def dna_to_protein(seq):
+    """Converts a given sequence to a protein sequence."""
+
+    # Verify a convertible sequence
+    if len(seq) % 3 != 0:
+        raise RuntimeError('Total number of bases must be a multiple of 3')
+
+    # Iterate through adding the proteins
+    protein = ''
+    for i in range(0, len(seq), 3):
+        protein += bioinfo_dicts.codons[seq[i:i+3]]
+    return protein
+
+
+# Create a protein sequence of the longest ORF in the SPI1 region
+# Has a long runtime so comment out if not needed
+# with open('salmonella_spi1_region_protein.fna', 'w') as pro:
+#     orf = longest_orf(seq)
+#     pro.write(dna_to_protein(orf))
