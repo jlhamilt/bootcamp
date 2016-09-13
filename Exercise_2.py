@@ -33,7 +33,7 @@ def gc_blocks(seq, block_size):
 def gc_map(seq, block_size, gc_thresh):
     """Returns a sequence with every block in the sequence having a GC
     content above the threshold as capital and below as lowercase."""
-    
+
     # Get the GC content for each block
     gc_cont = gc_blocks(seq, block_size)
 
@@ -46,5 +46,22 @@ def gc_map(seq, block_size, gc_thresh):
             new_seq += block.upper()
         else:
             new_seq += block.lower()
-
     return new_seq
+
+
+# Write a GC-mapped sequence fo the SPI1 region to a new FASTA file
+with open('data/salmonella_spi1_region.fna', 'r') as orig_seq, \
+open('spi1_region.txt', 'r') as seq, \
+open('data/salmonella_spi1_region_mapped.fna', 'w') as new_seq:
+
+    # Make the header for the new file
+    header = orig_seq.readline()
+    new_seq.write(header)
+
+    # Write the mapped sequence with 60 characters per line
+    i = 0
+    seq = seq.read()
+    seq_mapped = gc_map(seq, 1000, 0.45)
+    while i < len(seq):
+        new_seq.write(seq_mapped[i:i+60] + '\n')
+        i += 60
