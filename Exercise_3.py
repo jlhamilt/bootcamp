@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import scipy.integrate
 rc={'lines.linewidth': 2, 'axes.labelsize':18, 'axes.titlesize':18}
 sns.set(rc=rc)
 
@@ -87,3 +88,39 @@ plt.title('Lac Repressor Bohr Fold Change')
 
 
 # Exercise 3.3: Solving difeqs with NumPy
+# Solves the population equation for two coupled differential equations
+# dr/dt = alpha*r - beta*f*r
+# df/dt = delta*f*r - gamma*f
+
+# Given parameter values:
+alpha = 1
+beta = 0.2
+delta = 0.3
+gamma = 0.8
+delta_t = 0.001
+
+# Make the time points and empty arrays
+t = np.arange(0, 60, delta_t)
+r = np.empty_like(t)
+f = np.empty_like(t)
+
+# Set the initial rabbits and foxes
+r[0] = 10
+f[0] = 1
+
+# Use Euler's method to iterate through time
+for i in range(1, len(t)):
+    r[i] = r[i-1] + delta_t * r[i-1] * (alpha - beta * f[i-1])
+    f[i] = f[i-1] + delta_t * f[i-1] * (delta * r[i-1] - gamma)
+
+# Plot the rabbit and fox populations
+plt.close()
+plt.plot(t, r)
+plt.plot(t, f)
+plt.xlabel('Time')
+plt.ylabel('Population')
+plt.title("Euler's Method for Population Growth")
+plt.legend(('Rabbit', 'Fox'))
+# plt.show()
+
+# Bonus exercise using odeint
