@@ -50,9 +50,23 @@ x_high, y_high = ecdf(xa_high)
 x_low, y_low = ecdf(xa_low)
 
 # Plot the data
+# plt.close()
+# plt.plot(x_high, y_high, marker='.', linestyle='none', markersize=16, alpha=0.5)
+# plt.plot(x_low, y_low, marker='.', linestyle='none', markersize=16, alpha=0.5)
+# plt.xlabel('Cross-sectional area ($\mu m^2$)')
+# plt.ylabel('eCDF')
+# plt.legend(('high food', 'low food'), loc='lower right')
+# plt.show()
+
+# Use the scipy CDF function for plotting
+x = np.linspace(1600, 2500, 400)
+cdf_high = scipy.stats.norm.cdf(x, loc=np.mean(xa_high), scale=np.std(xa_high))
+cdf_low =  scipy.stats.norm.cdf(x, loc=np.mean(xa_low), scale=np.std(xa_low))
 plt.close()
 plt.plot(x_high, y_high, marker='.', linestyle='none', markersize=16, alpha=0.5)
 plt.plot(x_low, y_low, marker='.', linestyle='none', markersize=16, alpha=0.5)
+plt.plot(x, cdf_high, color='gray')
+plt.plot(x, cdf_low, color='gray')
 plt.xlabel('Cross-sectional area ($\mu m^2$)')
 plt.ylabel('eCDF')
 plt.legend(('high food', 'low food'), loc='lower right')
