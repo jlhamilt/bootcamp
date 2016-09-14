@@ -124,3 +124,40 @@ plt.legend(('Rabbit', 'Fox'))
 # plt.show()
 
 # Bonus exercise using odeint
+def population_rhs(rf, t, alpha, beta, delta, gamma):
+    """Input differential equation for the rabbit and fox population."""
+
+    # Unpack r and f
+    r, f = rf
+
+    # Compute dr/dt
+    dr_dt = (alpha - beta * f) * r
+
+    # Compute df/dt
+    df_dt = (delta * r - gamma) * f
+
+    # Return the result as a NumPy array
+    return np.array([dr_dt, df_dt])
+
+
+# Package the arguments in a tuple
+arg = (alpha, beta, delta, gamma)
+
+# Initial condition
+rf_0 = np.array([10, 1])
+
+# Integrate ODES
+rf = scipy.integrate.odeint(population_rhs, rf_0, t, args=arg)
+
+# Take out the solved r and f
+r_new, f_new = rf.transpose()
+
+# Plot the results
+plt.close()
+plt.plot(t, r_new)
+plt.plot(t, f_new)
+plt.xlabel('Time')
+plt.ylabel('Population')
+plt.title("ODE Solver for Population Growth")
+plt.legend(('Rabbit', 'Fox'))
+plt.show()
