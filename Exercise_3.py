@@ -84,7 +84,7 @@ plt.xlabel('Bohr Parameter')
 plt.ylabel('Fold Change')
 plt.legend(('Wild Type', 'Q18M', 'Q18A'), loc='upper left')
 plt.title('Lac Repressor Bohr Fold Change')
-# plt.show()
+# xplt.show()
 
 
 # Exercise 3.3: Solving difeqs with NumPy
