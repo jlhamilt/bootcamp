@@ -19,19 +19,17 @@ grant12 = pd.read_csv('data/grant_2012.csv', comment='#')
 # Get rid of the yearband column in the 1973 data
 grant73 = grant73.loc[:, ['band', 'species', 'beak length', 'beak depth']]
 
-# Create a year column on for each DataFrame
-grant73['year'] = pd.Series(np.full(len(grant73['band']), 1973, dtype=int))
-grant75['year'] = pd.Series(np.full(len(grant75['band']), 1975, dtype=int))
-grant87['year'] = pd.Series(np.full(len(grant87['band']), 1987, dtype=int))
-grant91['year'] = pd.Series(np.full(len(grant91['band']), 1991, dtype=int))
-grant12['year'] = pd.Series(np.full(len(grant12['band']), 2012, dtype=int))
-
 # List of the files and desired column names
 files = [grant73, grant75, grant87, grant91, grant12]
 desired_cols = ['band', 'species', 'beak length (mm)', 'beak depth (mm)', 'year']
+years = [1973, 1975, 1987, 1991, 2012]
 
-# Iterate througha and change the column names
+# Iterate through and change the column names
 for index, grant in enumerate(files):
+
+    # Create the year column
+    grant['year'] = pd.Series(np.full(len(grant['band']),
+                              years[index], dtype=int))
 
     # Create the dictionary for column names
     column_names = {}
@@ -59,7 +57,6 @@ grant_data = grant_data.drop_duplicates(['year', 'band'])
 grant_data.to_csv('data/my_grant_complete.csv', index=False)
 
 # Get the beak depths and lengths of fortis and scandens in every year
-years = [1973, 1975, 1987, 1991, 2012]
 beaks = []
 
 # Iterate through getting the beak depth and length
@@ -113,8 +110,10 @@ drone_sperm = pd.read_csv('data/bee_sperm.csv', comment='#')
 # Get the control and  pesticide data
 cont_weight = drone_weight.loc[drone_weight['Treatment']=='Control', 'Weight']
 pest_weight = drone_weight.loc[drone_weight['Treatment']=='Pesticide', 'Weight']
-cont_sperm = drone_sperm.loc[drone_sperm['Treatment']=='Control', 'Quality']
-pest_sperm = drone_sperm.loc[drone_sperm['Treatment']=='Pesticide', 'Quality']
+cont_sperm = drone_sperm.loc[(drone_sperm['Treatment']=='Control') &
+                             (drone_sperm['Quality'] >= 0), 'Quality']
+pest_sperm = drone_sperm.loc[(drone_sperm['Treatment']=='Pesticide') &
+                             (drone_sperm['Quality'] >= 0), 'Quality']
 
 # Get the ECDFs
 cont_weight_x, cont_weight_y = bootcamp_utils.ecdf(cont_weight)
@@ -139,5 +138,22 @@ plt.ylabel('ECDF')
 plt.legend(('Control', 'Pesticide'), loc='lower right')
 # plt.show()
 
+# # Confidence intervals for the mean and median of the samples
+# print('Confidence interval for mean weight of control: ',
+#        bootcamp_utils.bs_conf_int(cont_weight, np.mean, 10000))
+# print('Confidence interval for mean weight of pesticide treatment: ',
+#        bootcamp_utils.bs_conf_int(pest_weight, np.mean, 10000))
+# print('Confidence interval for mean sperm of control: ',
+#        bootcamp_utils.bs_conf_int(cont_sperm, np.mean, 10000))
+# print('Confidence interval for mean sperm of pesticide treatment: ',
+#        bootcamp_utils.bs_conf_int(pest_sperm, np.mean, 10000))
+# print('Confidence interval for median weight of control: ',
+#        bootcamp_utils.bs_conf_int(cont_weight, np.median, 10000))
+# print('Confidence interval for median weight of pesticide treatment: ',
+#        bootcamp_utils.bs_conf_int(pest_weight, np.median, 10000))
+# print('Confidence interval for median sperm of control: ',
+#        bootcamp_utils.bs_conf_int(cont_sperm, np.median, 10000))
+# print('Confidence interval for median sperm of pesticide treatment: ',
+#        bootcamp_utils.bs_conf_int(pest_sperm, np.median, 10000))
 
 # Exercise 4.3
