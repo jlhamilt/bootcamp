@@ -48,3 +48,24 @@ def bs_conf_int(data, func, size=1000, interval=95):
     # Create the confidence interval
     conf_int = np.percentile(reps, interval_range)
     return conf_int
+
+def plot_bs_ecdf(data, size=1,show=True, plt_orig=True):
+    """Plots the bootstrap of the data. Will not show the plot
+    if show is false, allowing for later plot modifications."""
+    # Plot the original
+    if plt_orig:
+        orig_x, orig_y = ecdf(data)
+        plt.plot(orig_x, orig_y, 'r.', markersize=14)
+    # Plot the bootstrap samples
+    for i in range(size):
+        bs_x, bs_y = ecdf(np.random.choice(data, replace=True, size=len(data)))
+        plt.plot(bs_x, bs_y, 'b.', markersize=10, alpha=0.5)
+
+    # Make a legend
+    if plt_orig:
+        plt.legend(('Data', 'Bootstrap'), loc='lower right')
+    # Format the plot
+    plt.ylabel('eCDF')
+    plt.title('Bootstrap Method')
+    if show:
+        plt.show()
