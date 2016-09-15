@@ -5,6 +5,8 @@ during the course and in future endeavors
 
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
+import scipy.optimize
 import seaborn as sns
 sns.set()
 
