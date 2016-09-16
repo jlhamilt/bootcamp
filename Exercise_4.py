@@ -88,10 +88,9 @@ plt.legend(('Geospiza fortis', 'Geospiza scandens'), loc='lower right')
 # plt.show()
 
 # Plot all of the depth vs length for all years
-show_plot = False
+show_plot = True
 for i in range(len(beaks)):
     fortis, scandens = beaks[i]
-    plt.close()
     plt.plot(fortis['beak depth (mm)'], fortis['beak length (mm)'], 'b.')
     plt.plot(scandens['beak depth (mm)'], scandens['beak length (mm)'], 'r.')
     plt.xlabel('beak depth (mm)')
@@ -100,43 +99,44 @@ for i in range(len(beaks)):
     plt.title('Beak Data ' + str(years[i]))
     if show_plot:
         plt.show()
+        plt.figure()
 
 
-# Exercise 4.2: Hacker stats on bee sperm data
-# Load in the data
-drone_weight = pd.read_csv('data/bee_weight.csv', comment='#')
-drone_sperm = pd.read_csv('data/bee_sperm.csv', comment='#')
-
-# Get the control and  pesticide data
-cont_weight = drone_weight.loc[drone_weight['Treatment']=='Control', 'Weight']
-pest_weight = drone_weight.loc[drone_weight['Treatment']=='Pesticide', 'Weight']
-cont_sperm = drone_sperm.loc[(drone_sperm['Treatment']=='Control') &
-                             (drone_sperm['Quality'] >= 0), 'Quality']
-pest_sperm = drone_sperm.loc[(drone_sperm['Treatment']=='Pesticide') &
-                             (drone_sperm['Quality'] >= 0), 'Quality']
-
-# Get the ECDFs
-cont_weight_x, cont_weight_y = bootcamp_utils.ecdf(cont_weight)
-pest_weight_x, pest_weight_y = bootcamp_utils.ecdf(pest_weight)
-cont_sperm_x, cont_sperm_y = bootcamp_utils.ecdf(cont_sperm)
-pest_sperm_x, pest_sperm_y = bootcamp_utils.ecdf(pest_sperm)
-
-# Plot the ECDFs
-plt.close()
-plt.plot(cont_weight_x, cont_weight_y, 'b.')
-plt.plot(pest_weight_x, pest_weight_y, 'r.')
-plt.xlabel('Weight (mg)')
-plt.ylabel('ECDF')
-plt.legend(('Control', 'Pesticide'), loc='lower right')
-# plt.show()
-
-plt.close()
-plt.plot(cont_sperm_x, cont_sperm_y, 'b.')
-plt.plot(pest_sperm_x, pest_sperm_y, 'r.')
-plt.xlabel('Quantity')
-plt.ylabel('ECDF')
-plt.legend(('Control', 'Pesticide'), loc='lower right')
-# plt.show()
+# # Exercise 4.2: Hacker stats on bee sperm data
+# # Load in the data
+# drone_weight = pd.read_csv('data/bee_weight.csv', comment='#')
+# drone_sperm = pd.read_csv('data/bee_sperm.csv', comment='#')
+#
+# # Get the control and  pesticide data
+# cont_weight = drone_weight.loc[drone_weight['Treatment']=='Control', 'Weight']
+# pest_weight = drone_weight.loc[drone_weight['Treatment']=='Pesticide', 'Weight']
+# cont_sperm = drone_sperm.loc[(drone_sperm['Treatment']=='Control') &
+#                              (drone_sperm['Quality'] >= 0), 'Quality']
+# pest_sperm = drone_sperm.loc[(drone_sperm['Treatment']=='Pesticide') &
+#                              (drone_sperm['Quality'] >= 0), 'Quality']
+#
+# # Get the ECDFs
+# cont_weight_x, cont_weight_y = bootcamp_utils.ecdf(cont_weight)
+# pest_weight_x, pest_weight_y = bootcamp_utils.ecdf(pest_weight)
+# cont_sperm_x, cont_sperm_y = bootcamp_utils.ecdf(cont_sperm)
+# pest_sperm_x, pest_sperm_y = bootcamp_utils.ecdf(pest_sperm)
+#
+# # Plot the ECDFs
+# plt.close()
+# plt.plot(cont_weight_x, cont_weight_y, 'b.')
+# plt.plot(pest_weight_x, pest_weight_y, 'r.')
+# plt.xlabel('Weight (mg)')
+# plt.ylabel('ECDF')
+# plt.legend(('Control', 'Pesticide'), loc='lower right')
+# # plt.show()
+#
+# plt.close()
+# plt.plot(cont_sperm_x, cont_sperm_y, 'b.')
+# plt.plot(pest_sperm_x, pest_sperm_y, 'r.')
+# plt.xlabel('Quantity')
+# plt.ylabel('ECDF')
+# plt.legend(('Control', 'Pesticide'), loc='lower right')
+# # plt.show()
 
 # # Confidence intervals for the mean and median of the samples
 # print('Confidence interval for mean weight of control: ',
