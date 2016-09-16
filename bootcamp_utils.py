@@ -8,7 +8,15 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import scipy.optimize
 import seaborn as sns
-sns.set()
+rc={'lines.linewidth': 2, 'axes.labelsize': 18, 'axes.titlesize': 18}
+sns.set(rc=rc)
+# Our image processing tools
+import skimage.filters
+import skimage.io
+import skimage.measure
+import skimage.morphology
+import skimage.segmentation
+
 
 def ecdf(data):
     """Compute x, y values for an empirical distribution function.
@@ -71,3 +79,68 @@ def plot_bs_ecdf(data, size=1,show=True, plt_orig=True):
     plt.title('Bootstrap Method')
     if show:
         plt.show()
+
+# Segmentation function
+def my_segmentation(image, threshold='otsu', seg='below',
+                    max_obj=1000, min_obj=250, plot=False):
+    """
+    Takes an imput image as an array and returns a labeled segmentation
+    mask. Corrects for uneven illumination, performs a median filter,
+    thesholds the image, then segments. The thresholding operation can
+    be a specified integer value, but default uses otsu. Removes
+    objects near the border and that are outside the object size range.
+    Segmentation defaults to phase images, segmenting everything below
+    the threshold. Can be changed to 'above' to segment above the
+    threshold.
+    """
+    # Veryify inputs for threshold and segmentation
+    if seg != 'below' and seg != 'above':
+        raise RuntimeError("Segmentation can only be 'above' or 'below'")
+    if threshold != 'otsu' and type(threshold) != int:
+        raise RuntimeError("Threshold must be 'otsu' or an integer")
+
+    # Perform a median filter to correct for hot pixels
+    selem = skimage.morphology.square(3)
+    image_filt = skimage.filters.median(image, selem)
+
+    # Correct for uneven illumination
+    im_blur = skimage.filters.gaussian(image_filt, 100.0)
+    image_corrected = skimage.img_as_float(image_filt) - im_blur
+
+    # Perform a Chambolle total variation filter to correct for dots
+    image_tv = skimage.restoration.denoise_tv_chambolle(image_corrected,
+                                                        weight=0.001)
+
+    # Segmenting the image
+    if threshold == 'otsu':
+        threshold = skimage.filters.threshold_otsu(image_tv)
+    if seg == 'below':
+        img_bw = image_tv < threshold
+    else:
+        img_bw = image_tv > threshold
+
+    # Clear border with 5 pixel buffer
+    img_bw = skimage.segmentation.clear_border(img_bw, buffer_size=5)
+
+    # Label the objects
+    seg_lab = skimage.measure.label(img_bw, background=0)
+
+    # Get the properties of each object
+    props = skimage.measure.regionprops(seg_lab)
+    im_filt = seg_lab > 0
+
+    # Get rid of the objects outside our range
+    for prop in props:
+        if prop.area < min_obj or prop.area > max_obj:
+            im_filt[seg_lab==prop.label] = 0
+
+    # Relabel in image
+    seg_lab = skimage.measure.label(im_filt, background=0)
+
+    # Plot the image
+    if plot:
+        plt.close()
+        with sns.axes_style('dark'):
+            plt.imshow(seg_lab, cmap=plt.cm.Spectral_r)
+        plt.show()
+    return seg_lab
